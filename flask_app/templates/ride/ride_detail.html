@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <span class="d-flex justify-content-end">
+        <a href="/rides/dashboard" class="me-5 btn btn-primary">home</a>
+        <a href="/logout" class="btn btn-success">logout</a>
+    </span>
+</div>
+
+<div class="container mt-5">
+
+    <div class="row mb-3">
+        <div class="col-8">
+            <h1>Ready for your trip to the {{ one_ride.destination }}?</h1>
+        </div>
+
+    </div>
+
+    <div class="container border border-black">
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>Who's driving?</td>
+                    <td>{{ one_ride.driver.first_name }}</td>
+                </tr>
+                {% if one_ride.user.id == user.id %}
+                <tr>
+                    <td>Who's coming along?</td>
+                    <td>You</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td>Who's coming along?</td>
+                    <td>{{ one_ride.user.first_name }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td>Date:</td>
+                    <td>{{ one_ride.ride_date.strftime('%B %d') }}</td>
+                </tr>
+                <tr>
+                    <td>Pick-up Location:</td>
+                    <td>{{ one_ride.pickup }}</td>
+                </tr>
+                <tr>
+                    <td>Details:</td>
+                    <td>{{ one_ride.details }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            {% if one_ride.user.id == user.id %}
+            <a href="/rides/edit/{{one_ride.id}}" class="btn btn-success">edit</a>
+            <a href="/rides/delete/{{one_ride.id}}" class="btn btn-danger">DELETE</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2>Ride messages:</h2>
+    <div>
+        <table class="table table-borderless">
+            <tbody>
+                {% for message in all_messages %}
+                <tr>
+                    {% if message.users.id == user.id %}
+                        <td>You:</td>
+                        <td>{{ message.message }}</td>
+                    {% else %}
+                        <td>{{message.user.first_name}}:</td>
+                        <td>{{ message.message }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <form action="/rides/post/{{ one_ride.id }}" method="post">
+        <input type="text" class="form-control" name="message">
+        <input type="submit" class="btn btn-warning mt-3" value="Send Message">
+    </form>
+</div>
+
+{% endblock %}

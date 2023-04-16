@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Welcome, {{ one_user.first_name }}</span>
+        <span class="d-flex me-3">
+            <a href="/rides/new" class="me-5 btn btn-primary">Request a Ride</a>
+            <a href="/logout" class="btn btn-success">logout</a>
+        </span>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row justify-content-around">
+        <div class="col-4 p-3 mb-2">
+            <h2 class="mb-3">Rideshare Requests</h2>
+            {% for ride in all_rides%}
+                {% if not ride.driver_id %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>Rider:</th>
+                                    <td>{{ride.user.first_name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Destination:</td>
+                                    <td>{{ride.destination}}</td>
+                                </tr>
+                                <tr>
+                                    <td>When needed:</td>
+                                    <td>{{ride.ride_date.strftime('%B %d')}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {% if ride.user.id == one_user.id %}
+                        <a href="/rides/delete/{{ride.id}}" class="btn btn-danger">DELETE</a>
+                        {% else %}
+                        <form action="/rides/dashboard/{{ride.id}}" method="post">
+                            <input type="submit" class="btn btn-primary" value="I can drive!">
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-4 p-3 mb-2">
+            <h2 class="mb-3">Booked Rideshares</h2>
+            {% for ride in all_rides %}
+                {% if ride.driver_id %}
+                    {% if ride.driver.id == one_user.id %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <span class="font-weight-bold">You</span> are driving <span class="font-weight-bold">{{ride.user.first_name}}</span> to {{ride.destination}} on {{ride.ride_date.strftime('%B %d')}}
+                            <div class="d-flex">
+                                <a href="/rides/{{ride.id}}">Details</a> | 
+                                <form action="/rides/dashboard/cancel/{{ride.id}}" method="post">
+                                    <input type="submit" value="Cancel">
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% elif ride.user.id == one_user.id %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <span class="font-weight-bold">You are riding with <span
+                                class="font-weight-bold">{{ride.driver.first_name}}</span> to {{ride.destination}} on
+                            {{ride.ride_date.strftime('%B %d')}}
+                            <div>
+                                <a href="/rides/{{ride.id}}">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <span class="font-weight-bold">{{ride.driver.first_name}}</span> is driving <span
+                                class="font-weight-bold">{{ride.user.first_name}}</span> to {{ride.destination}} on
+                            {{ride.ride_date.strftime('%B %d')}}
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+                </div>
+    </div>
+</div>
+</div>
+</div>
+
+{% endblock %}

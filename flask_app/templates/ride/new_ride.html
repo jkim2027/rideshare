@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Request a Ride</span>
+        <span class="d-flex me-3">
+            <a href="/rides/dashboard" class="me-5 btn btn-primary">home</a>
+            <a href="/logout" class="btn btn-success">logout</a>
+        </span>
+    </div>
+</nav>
+<div class="container mt-5">
+
+    <form action="/rides/new" method="post">
+        {% with messages = get_flashed_messages(category_filter=['ride']) %}
+        {% if messages %}
+        <h5 class="text-danger">Please check the following:</h5>
+        {% for message in messages %}
+        <ul>
+            <li class="text-danger">{{message}}</li>
+        </ul>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <label for="destination" class="form-label">Destination</label>
+        <input type="text" class="form-control" name="destination">
+        <label for="pickup" class="form-label mt-3">Pick-up Location:</label>
+        <input type="text" class="form-control" name="pickup">
+        <label for="ride_date" class="form-label mt-3">Rideshare Date:</label>
+        <input type="date" name="ride_date" id="ride_date" class="form-control">
+        <label for="details" class="form-label mt-3">Details:</label>
+        <textarea name="details" cols="30" rows="5" class="form-control"></textarea>
+        <input type="submit" class="btn btn-success mt-3" value="Post">
+    </form>
+</div>
+
+{% endblock %}
