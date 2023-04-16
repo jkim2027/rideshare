@@ -21,11 +21,12 @@ class Message:
         return results
     
     @classmethod
-    def get_message(cls, ride_id):
+    def get_messages(cls, ride_id):
         query = """SELECT * FROM messages
             JOIN rides ON rides.id=messages.ride_id
             JOIN users ON messages.user_id=users.id
-            WHERE rides.id=%(id)s"""
+            WHERE rides.id=%(id)s
+            ORDER BY messages.id"""
         data = {'id': ride_id}
         results = connectToMySQL(cls.DB).query_db(query, data)
         all_messages = []

@@ -60,20 +60,24 @@
 </div>
 
 <div class="container mt-5">
-    <h2>Ride messages:</h2>
+    <h2 class="text-info">Ride messages:</h2>
     <div>
         <table class="table table-borderless">
             <tbody>
-                {% for message in all_messages %}
+                {% for message in all_message %}
+                {% if message.user_id == user.id %}
                 <tr>
-                    {% if message.users.id == user.id %}
-                        <td>You:</td>
-                        <td>{{ message.message }}</td>
+                        <td class="text-info">You:</td>
+                        <td class="text-info"> {{ message.message }}</td>
+                        </tr>
                     {% else %}
-                        <td>{{message.user.first_name}}:</td>
-                        <td>{{ message.message }}</td>
+                    <tr>
+                        <td class="text-info">{{message.user.first_name}}:</td>
+                        <td class="text-info">{{ message.message }}</td>
+                    </tr>
+                        
                     {% endif %}
-                </tr>
+                        
                 {% endfor %}
             </tbody>
         </table>

@@ -36,7 +36,7 @@ def show_one(ride_id):
     data = {'id': session['user_id']}
     user = User.get_by_id(data)
     one_ride = ride.Ride.get_one_ride(ride_id)
-    message = Message.get_message(ride_id)
+    message = Message.get_messages(ride_id)
     return render_template("ride/ride_detail.html", one_ride=one_ride, user=user, all_message=message)
 
 @app.route("/rides/edit/<int:ride_id>")
